@@ -25,8 +25,8 @@ jobs:
       - name: 1. Start Pact Broker
         # working-directory: WireMock_Works
         run: |
-          docker compose -f src/test/resources/docker_compose_pactBroker.yml down -v
-          docker compose -f src/test/resources/docker_compose_pactBroker.yml up -d --wait
+          docker compose -f src/test/resources/docker/docker_compose_pactBroker.yml down -v
+          docker compose -f src/test/resources/docker/docker_compose_pactBroker.yml up -d --wait
  
       - name: 2. Run Consumer Tests & Publish Contracts
         # working-directory: WireMock_Works
