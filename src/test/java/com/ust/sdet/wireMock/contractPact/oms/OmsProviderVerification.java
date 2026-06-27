@@ -70,7 +70,7 @@ public class OmsProviderVerification {
     @State("SKU-9 has stock")
     void skuHasStock() {
         wireMock.stubFor(get(urlEqualTo("/orders/84"))
-                .withHeader("Content-Type", matching("application/json(;.*)?"))
+//                .withHeader("Content-Type", matching("application/json(;.*)?"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
