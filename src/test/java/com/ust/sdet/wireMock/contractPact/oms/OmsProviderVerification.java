@@ -58,7 +58,7 @@ public class OmsProviderVerification {
 
     @State("Order 123 exists")
     void orderExists() {
-        wireMock.stubFor(get(urlEqualTo("/order/123"))
+        wireMock.stubFor(get(urlEqualTo("/orders/123"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -69,10 +69,10 @@ public class OmsProviderVerification {
 
     @State("SKU-9 has stock")
     void skuHasStock() {
-        wireMock.stubFor(post(urlEqualTo("/orders/84"))
+        wireMock.stubFor(get(urlEqualTo("/orders/84"))
                 .withHeader("Content-Type", matching("application/json(;.*)?"))
                 .willReturn(aResponse()
-                        .withStatus(201)
+                        .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
                                 {
