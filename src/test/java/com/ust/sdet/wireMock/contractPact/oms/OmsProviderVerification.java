@@ -56,80 +56,63 @@ public class OmsProviderVerification {
     }
 
 
-    @State("Order 245 exists")
-    void isOrderExists() {
+    @State("Order 123 exists")
+    void orderExists() {
         wireMock.stubFor(get(urlEqualTo("/order/123"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-    {"orderId": 123, "status": "CONFIRMED", "total": 42.0}
-    """)));
+                                {"orderId": 123, "status": "CONFIRMED", "total": 42.0}
+                                """)));
     }
 
-    @State("Creating a new order")
-    void createOrder() {
-        wireMock.stubFor(post(urlEqualTo("/orders/"))
+    @State("SKU-9 has stock")
+    void skuHasStock() {
+        wireMock.stubFor(post(urlEqualTo("/orders/84"))
                 .withHeader("Content-Type", matching("application/json(;.*)?"))
                 .willReturn(aResponse()
                         .withStatus(201)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-    {"statusCode": 201, "orderId": 101, "status": "CREATED", "total": 2000}
-    """)));
+                                {
+                                  "id": 84,
+                                  "status": "CONFIRMED",
+                                  "total": 42.0
+                                }
+                                """)));
+
     }
 
-    @State("SKU-9 has Stock")
-    void getInventory() {
-        wireMock.stubFor(get(urlEqualTo("/inventory/SKU-9"))
+    @State("Provider can create orders")
+    void createOrder() {
+        wireMock.stubFor(post(urlEqualTo("/orders"))
+                .withHeader("Content-Type", matching("application/json(;.*)?"))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(201)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-    {"sku": "SKU-9", "qty": 5}
-    """)));
+                                {
+                                  "statuscode": 201,
+                                  "orderId": 125,
+                                  "status": "CREATED",
+                                  "total": 42.0
+                                }
+                                """)));
     }
-}
 
-//
-//import au.com.dius.pact.provider.junit5.HttpTestTarget;
-//import au.com.dius.pact.provider.junit5.PactVerificationContext;
-//import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
-//import au.com.dius.pact.provider.junitsupport.Provider;
-//import au.com.dius.pact.provider.junitsupport.State;
-//import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.TestTemplate;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//
-//
-//@Provider("oms-provider")
-//@PactBroker(url = "http://localhost:9292")
-//public class OmsProviderVerification {
-//
-//
-//    @SuppressWarnings("JUnitMalformedDeclaration")
-//    @BeforeEach
-//    void setup(PactVerificationContext context){
-//        context.setTarget(new HttpTestTarget("localhost", 4010, "/"));
-//    }
-//
-//    @TestTemplate
-//    @ExtendWith(PactVerificationInvocationContextProvider.class)
-//    void verify(PactVerificationContext context){
-//        context.verifyInteraction();
-//    }
-//
-//    @State("Order 123 exists")
-//    void isOrderExists(){
-//
-//    }
-//    @State("Sku-9 has stock")
-//    void hasStock(){
-//
-//    }
-//    @State("Provider can create orders")
-//    void createOrder(){
-//
-//    }
-//}
+    @State("Order 999 does not exist")
+        void orderNotFound() {
+            wireMock.stubFor(get(urlEqualTo("/orders/999"))
+                    .willReturn(aResponse()
+                            .withStatus(404)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody("""
+                            {
+                              "error": "ORDER_NOT_FOUND",
+                              "message": "Order not Found"
+                            }
+                            """)));
+    }
+
+}

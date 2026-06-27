@@ -17,33 +17,27 @@ final class OmsClient {
     private String baseUrl;
     private HttpClient client;
 
-    private static final String BASE_URL = System.getProperty(
-            "baseUrl",
-            System.getenv().getOrDefault("BASE_URL", "http://localhost:4010/")
-    );
 
     public OmsClient(String baseurl) {
         this.baseUrl=baseurl;
     }
 
-    @BeforeEach
-    void setup() {
-        this.baseUrl = BASE_URL;
-        this.client = HttpClient.newHttpClient();
-    }
 
     public Order getOrder(int id) {
 
         Response response = given()
                 .baseUri(baseUrl)
                 .basePath("/orders/" + id)
+                .when()
                 .get();
 
         response.then().statusCode(200);
 
         int orderId = response.then().extract().path("id");
         String status = response.then().extract().path("status");
-        int total = response.then().extract().path("total");
+        Number val = response.then().extract().path("total");
+        double total = val.doubleValue();
+
 
         return new Order(response.statusCode(),orderId,status,total);
     }
@@ -62,28 +56,20 @@ final class OmsClient {
     }
 
 
-//    public ErrorMessage getNegOrder(int id) {
-//
-////        Response response = given()
-////                .baseUri(baseUrl)
-////                .basePath("/orders/" + id)
-////                .get();
-////
-////        response.then().statusCode(200);
-//        Response response = given()
-//                .baseUri(baseUrl)
-//                .when()
-//                .get("/orders/"+id);
-//
-////        response.then().statusCode(404);
-//
-//        String error = response.then().extract().path("error");
-//        int orderId = response.then().extract().path("id");
-//        String status = response.then().extract().path("status");
-//        double total = response.then().extract().path("total");
-//
-//        return new Order(response.statusCode(),orderId,status,total);
-//    }
+    public ErrorMessage getNegOrder(int id) {
+
+        Response response = given()
+                .baseUri(baseUrl)
+                .when()
+                .get("/orders/"+id);
+
+        response.then().statusCode(404);
+        String error = response.then().extract().path("error");
+        String message = response.then().extract().path("message");
+
+
+        return new ErrorMessage(error, message);
+    }
 
     record Order(int statuscode,int orderId,String status,double total){}
 

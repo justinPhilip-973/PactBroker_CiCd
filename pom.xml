@@ -23,7 +23,7 @@
         <pact.publish.consumer.version>${project.version}</pact.publish.consumer.version>
         <pact.publish.consumer.branchName>local</pact.publish.consumer.branchName>
         <git.sha>local</git.sha>
-        <pact.verifier.publishResults>false</pact.verifier.publishResults>
+        <pact.verifier.publishResults>true</pact.verifier.publishResults>
         <pact.provider.branch>local</pact.provider.branch>
         <slf4j.version>2.0.17</slf4j.version>
         <selenium.version>4.45.0</selenium.version>
